@@ -15,7 +15,7 @@ class Zipcode extends Field
      */
     public $component = 'zipcode';
 
-    public function __construct($name, $zipcode_placeholder, $house_number_placeholder, $field_connections = [], callable $resolveCallback = null)
+    public function __construct($name, $zipcode_placeholder, $house_number_placeholder, $field_connections = [], ?callable $resolveCallback = null)
     {
         $this->name = $name;
         $this->zipcode_placeholder = $zipcode_placeholder;
