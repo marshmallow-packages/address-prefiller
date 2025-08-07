@@ -22,7 +22,7 @@ class Zipcode
 
     protected $flexible_id_prefix = null;
 
-    public function get(string $zip_code, string $house_number = null)
+    public function get(string $zip_code, ?string $house_number = null)
     {
         $response_array = $this->callGeoDataApi($zip_code, $house_number);
         $this->validateApiResponse($response_array);
@@ -71,7 +71,7 @@ class Zipcode
         }
     }
 
-    protected function callGeoDataApi(string $zip_code, string $house_number = null)
+    protected function callGeoDataApi(string $zip_code, ?string $house_number = null)
     {
         $zip_code = str_replace(' ', '', $zip_code);
         $url = "https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?fq=postcode:{$zip_code}";
@@ -87,7 +87,7 @@ class Zipcode
         throw new Exception(__('The National Geo Register is down at the moment.'), 2);
     }
 
-    public function flexibleIdPrefix(string $flexible_id_prefix = null): self
+    public function flexibleIdPrefix(?string $flexible_id_prefix = null): self
     {
         $this->flexible_id_prefix = ($flexible_id_prefix !== 'null') ? $flexible_id_prefix : null;
         return $this;
