@@ -51,12 +51,12 @@ class Zipcode
 
     protected function getLatitudeFromResponse(array $address_information)
     {
-        return $this->parsePointLocation($address_information, 0);
+        return $this->parsePointLocation($address_information, 1);
     }
 
     protected function getLongitudeFromResponse(array $address_information)
     {
-        return $this->parsePointLocation($address_information, 1);
+        return $this->parsePointLocation($address_information, 0);
     }
 
     protected function getAddressInformation(array $response_array)
