@@ -15,6 +15,10 @@ class Zipcode extends Field
      */
     public $component = 'zipcode';
 
+    public $zipcode_placeholder;
+
+    public $house_number_placeholder;
+
     public function __construct($name, $zipcode_placeholder, $house_number_placeholder, $field_connections = [], ?callable $resolveCallback = null)
     {
         $this->name = $name;
@@ -82,7 +86,7 @@ class Zipcode extends Field
         return $this->withMeta(['longitude' => $field]);
     }
 
-    protected function resolveAttribute($resource, $attribute)
+    protected function resolveAttribute($resource, string $attribute): mixed
     {
         $zipcode = $this->meta()['zipcode'];
         $housenumber = $this->meta()['housenumber'];
@@ -111,9 +115,9 @@ class Zipcode extends Field
      */
     protected function fillAttributeFromRequest(
         NovaRequest $request,
-        $requestAttribute,
-        $model,
-        $attribute
+        string $requestAttribute,
+        object $model,
+        string $attribute
     ) {
         $request->except($this->attribute);
     }
