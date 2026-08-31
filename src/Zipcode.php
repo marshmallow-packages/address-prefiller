@@ -5,9 +5,25 @@ namespace Marshmallow\Zipcode;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 
 class Zipcode
 {
+    /**
+     * REQUEST_TIMEOUT is the total time of a single attempt (connecting
+     * included), so the worst case wall clock time of a lookup is roughly
+     * REQUEST_TRIES * REQUEST_TIMEOUT + RETRY_DELAY, about 8 seconds.
+     * Keep that budget low; this call happens while a visitor is waiting
+     * on a form submit.
+     */
+    protected const CONNECT_TIMEOUT = 2;
+
+    protected const REQUEST_TIMEOUT = 4;
+
+    protected const REQUEST_TRIES = 2;
+
+    protected const RETRY_DELAY = 150;
+
     protected $street = 'street';
 
     protected $city = 'city';
@@ -78,7 +94,15 @@ class Zipcode
         if ($house_number) {
             $url .= "&fq=huisnummer:{$house_number}";
         }
-        $response = Http::get($url);
+        $response = Http::timeout(self::REQUEST_TIMEOUT)
+            ->connectTimeout(self::CONNECT_TIMEOUT)
+            ->retry(
+                self::REQUEST_TRIES,
+                self::RETRY_DELAY,
+                fn ($exception) => $exception instanceof ConnectionException,
+                throw: false
+            )
+            ->get($url);
 
         if ($response->successful()) {
             return $response->json();
