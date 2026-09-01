@@ -1,9 +1,10 @@
 name: PHP Syntax Checker
 
 on:
-    pull_request:
+    push:
         branches:
-            - master
+            - main
+    workflow_dispatch:
 
 jobs:
     php-cs-fixer:
